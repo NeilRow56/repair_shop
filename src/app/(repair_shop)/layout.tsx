@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 
 
 
@@ -19,6 +19,7 @@ import Image from "next/image";
 import { Toaster } from "@/components/ui/sonner";
 import { DasboardLinks } from "@/components/DashboardLinks";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {  LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 
 
@@ -96,7 +97,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                     <Link href="/dashboard/settings">Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    Sign Out
+                    <LogoutLink><LogOut />Sign Out</LogoutLink>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
