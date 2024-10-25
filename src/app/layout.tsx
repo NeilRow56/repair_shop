@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     default: "wpAccPac.",
   },
   description: "The online working papers app for accountants",
+  applicationName: "WpAccPac"
 };
 
 export default function RootLayout({
