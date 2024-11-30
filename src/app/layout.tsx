@@ -16,11 +16,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | wpAccPac.",
-    default: "wpAccPac.",
+    template: "%s | Repair Shop.",
+    default: "Repair SheetDescription",
   },
   description: "The online working papers app for accountants",
-  applicationName: "WpAccPac"
+  applicationName: "Repair Shop"
 };
 
 export default function RootLayout({

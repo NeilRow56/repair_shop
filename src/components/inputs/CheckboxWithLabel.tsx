@@ -16,6 +16,7 @@ type Props<S> = {
     fieldTitle: string,
     nameInSchema: keyof S & string,
     message: string,
+    disabled?: boolean,
 }
 
 export function CheckboxWithLabel<S>({

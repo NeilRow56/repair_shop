@@ -11,12 +11,16 @@ import { InputWithLabel } from "@/components/inputs/InputWithLabel"
 import { SelectWithLabel } from "@/components/inputs/SelectWithLabel"
 import { TextAreaWithLabel } from "@/components/inputs/TeaxtAreaWithLabel"
 import { StatesArray } from "@/constants/StateArray"
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs"
+import { CheckboxWithLabel } from "@/components/inputs/CheckboxWithLabel"
 
 type Props = {
     customer?: selectCustomerSchemaType,
 }
 
 export default function CustomerForm({ customer }: Props) {
+    const { getPermission, isLoading } = useKindeBrowserClient()
+    const isManager = !isLoading && getPermission('manager')?.isGranted
     const defaultValues: insertCustomerSchemaType = {
         id: customer?.id ?? 0,
         //The nullish coalescing ( ?? ) operator is a logical operator that returns its right-hand side operand when its left-hand side operand is null or undefined
@@ -31,6 +35,7 @@ export default function CustomerForm({ customer }: Props) {
         phone: customer?.phone ?? '',
         email: customer?.email ?? '',
         notes: customer?.notes ?? '',
+        active: customer?.active ?? true,
     }
 
     const form = useForm<insertCustomerSchemaType>({
@@ -45,9 +50,9 @@ export default function CustomerForm({ customer }: Props) {
 
     return (
         <div className="flex flex-col gap-1 sm:px-8">
-            <div>
+            <div className="mb-4">
                 <h2 className="text-2xl font-bold text-primary">
-                    {customer?.id ? "Edit" : "New"} Customer Form
+                {customer?.id ? "Edit" : "New"} Customer {customer?.id ? `#${customer.id}` : "Form"}
                 </h2>
             </div>
             <Form {...form}>
@@ -113,6 +118,12 @@ export default function CustomerForm({ customer }: Props) {
                         nameInSchema="notes"
                         className="h-[152px]"
                     />
+                    {isLoading ? <p>Loading...</p> : isManager && customer?.id ? (
+                            <CheckboxWithLabel<insertCustomerSchemaType>
+                                fieldTitle="Active"
+                                nameInSchema="active"
+                                message="Yes"
+                            />) : null}
 
                     <div className="flex gap-2">
                         <Button

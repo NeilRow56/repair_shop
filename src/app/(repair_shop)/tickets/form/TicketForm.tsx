@@ -11,15 +11,23 @@ import { Button } from "@/components/ui/button"
 import { TextAreaWithLabel } from "@/components/inputs/TeaxtAreaWithLabel"
 import { CheckboxWithLabel } from "@/components/inputs/CheckboxWithLabel"
 import { InputWithLabel } from "@/components/inputs/InputWithLabel"
+import { SelectWithLabel } from "@/components/inputs/SelectWithLabel"
 
 type Props = {
     customer: selectCustomerSchemaType,
     ticket?: selectTicketSchemaType,
+    techs?: {
+        id: string,
+        description: string,
+    }[],
+    isEditable?: boolean,
 }
 
 export default function TicketForm({
-    customer, ticket
+    customer, ticket, techs, isEditable = true
 }: Props) {
+    const isManager = Array.isArray(techs)
+
     const defaultValues: insertTicketSchemaType = {
         id: ticket?.id ?? "(New)",
         customerId: ticket?.customerId ?? customer.id,
@@ -42,10 +50,12 @@ export default function TicketForm({
     return (
         <div className="flex flex-col gap-1 sm:px-8">
             <div>
-                <h2 className="text-2xl font-bold text-primary mb-2">
-                    {ticket?.id
+                <h2 className="text-2xl font-bold">
+                    {ticket?.id && isEditable
                         ? `Edit Ticket # ${ticket.id}`
-                        : "New Ticket Form"
+                        : ticket?.id
+                            ? `View Ticket # ${ticket.id}`
+                            : "New Ticket Form"
                     }
                 </h2>
             </div>
@@ -60,19 +70,32 @@ export default function TicketForm({
                         <InputWithLabel<insertTicketSchemaType>
                             fieldTitle="Title"
                             nameInSchema="title"
+                            disabled={!isEditable}
                         />
+{isManager ? (
+                            <SelectWithLabel<insertTicketSchemaType>
+                                fieldTitle="Tech ID"
+                                nameInSchema="tech"
+                                data={[{ id: 'new-ticket@example.com', description: 'new-ticket@example.com' }, ...techs]}
+                            />
+                        ) : (
+                            <InputWithLabel<insertTicketSchemaType>
+                                fieldTitle="Tech"
+                                nameInSchema="tech"
+                                disabled={true}
+                            />
+                        )}
 
-                        <InputWithLabel<insertTicketSchemaType>
-                            fieldTitle="Tech"
-                            nameInSchema="tech"
-                            disabled={true}
-                        />
-
-                        <CheckboxWithLabel<insertTicketSchemaType>
-                            fieldTitle="Completed"
-                            nameInSchema="completed"
-                            message="Yes"
-                        />
+                        {ticket?.id ? (
+                            <CheckboxWithLabel<insertTicketSchemaType>
+                                fieldTitle="Completed"
+                                nameInSchema="completed"
+                                message="Yes"
+                                disabled={!isEditable}
+                            />
+                        ) : null}
+                       
+                       
 
                         <div className="mt-10 space-y-2 ">
                             <h3 className="text-lg text-primary font-bold ">Customer Info</h3>
@@ -94,8 +117,9 @@ export default function TicketForm({
                             fieldTitle="Description"
                             nameInSchema="description"
                             className="h-96"
+                            disabled={!isEditable}
                         />
-
+                    {isEditable ? (
                         <div className="flex gap-2">
                             <Button
                                 type="submit"
@@ -115,7 +139,7 @@ export default function TicketForm({
                                 Reset
                             </Button>
                         </div>
-
+                    ) : null}
                     </div>
 
                 </form>
